@@ -1,13 +1,9 @@
-import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Topology.Basic
 import Mathlib.Init.Set
 import Mathlib.Data.Set.Basic
 
-open CategoryTheory
 open Topology
 open Set
--- is classical reasoning really necessary for the definition of
--- the indiscret topological space?
 open Classical
 
 namespace Discret
@@ -16,7 +12,7 @@ instance : TopologicalSpace a where
   IsOpen (_ : Set a) := True
   isOpen_univ := by simp
   isOpen_inter := by simp
-  isOpen_unionₛ := by simp
+  isOpen_sUnion := by simp
 
 -- samples
 def x : Set Nat := {1, 2, 3}
@@ -55,14 +51,14 @@ instance : TopologicalSpace a where
           suffices h2 : x ∩ y = univ from Or.inl h2
           have : x ∩ y = univ := by simp[this, h]
           exact this
-  isOpen_unionₛ s f := by
+  isOpen_sUnion s f := by
     have : Set (Set a) := s
     have : ∀ (t : Set a), t ∈ s → t = univ ∨ t = ∅ := f
     show (⋃₀ s = univ) ∨ (⋃₀ s = ∅)
     exact byCases
       (fun h : univ ∈ s => by
         suffices h2 : ⋃₀ s = univ from Or.inl h2
-        have : univ ⊆ ⋃₀ s := le_supₛ h
+        have : univ ⊆ ⋃₀ s := le_sSup h
         simp[*, Iff.mp Set.univ_subset_iff])
       (fun h : ¬(univ ∈ s) =>
         suffices h2 : ⋃₀ s = ∅ from Or.inr h2
@@ -75,7 +71,7 @@ instance : TopologicalSpace a where
           | inl _ => simp[*] at p
           | inr _ => simp[*]
         have : ⋃₀ s = ∅ :=
-          have : ⋃₀ s ⊆ ∅ := supₛ_le h3
+          have : ⋃₀ s ⊆ ∅ := Set.sUnion_subset h3
           Set.eq_empty_of_subset_empty this
         this)
 
