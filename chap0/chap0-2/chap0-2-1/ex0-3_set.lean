@@ -1,7 +1,11 @@
 import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Data.Set.Function
+import Mathlib.Data.Rat.Basic
 
 open Set
 open CategoryTheory
+
+namespace from_scratch
 
 structure Obj where
   carrier : Type u
@@ -50,8 +54,8 @@ theorem propext2 (h1 h2 : a -> b -> Prop) :
       apply propext (h ta tb)
     apply funext₂ h3
 
-theorem moreq (f g : Mor x y) : (∀ x' y', f.prop x' y' ↔ g.prop x' y')
-  -> f = g := by
+theorem moreq (f g : Mor x y) :
+  (∀ x' y', f.prop x' y' ↔ g.prop x' y') -> f = g := by
   intro h
   have h2 : f.prop = g.prop := propext2 f.prop g.prop h
 
@@ -121,11 +125,44 @@ instance : Category Obj where
 
 namespace samples
 
-def obj1 : Obj := Obj.mk Nat (fun _ => True)
-def obj2 : Obj := Obj.mk Nat (fun _ => True)
+abbrev n := Obj.mk ℕ (fun _ => True)
+abbrev z := Obj.mk ℤ (fun _ => True)
+abbrev q := Obj.mk ℚ (fun _ => True)
 
-def f : obj1 ⟶ obj2 := Mor.mk (fun (x : Nat) y => y = 2 * x)
+def f : n ⟶ z := Mor.mk (fun x y => y = 2 * x)
   (by intros; apply And.intro; exact True.intro; exact True.intro)
   (by simp)
+def g : z ⟶ q := Mor.mk (fun x y => y = x / 3)
+  (by intros; apply And.intro; exact True.intro; exact True.intro)
+  (by simp)
+def h : n ⟶ q := f ≫ g
 
 end samples
+end from_scratch
+
+namespace with_set_function
+
+structure Obj where
+  carrier : Type u
+  s : Set carrier
+
+structure Mor (x : Obj) (y : Obj) where
+  fxy : x.carrier -> y.carrier
+  p : Set.MapsTo fxy x.s y.s
+
+instance : Category Obj where
+  Hom := Mor
+  id x := Mor.mk id (Set.mapsTo_id x.s)
+  comp f g := Mor.mk (g.fxy ∘ f.fxy) (MapsTo.comp g.p f.p)
+
+namespace samples
+
+abbrev n := Obj.mk ℕ univ
+abbrev z := Obj.mk ℤ univ
+abbrev q := Obj.mk ℚ univ
+def f : n ⟶ z := Mor.mk (fun x => 2 * x) (by simp)
+def g : z ⟶ q := Mor.mk (fun x => x / 3) (by simp)
+def h : n ⟶ q := f ≫ g
+
+end samples
+end with_set_function
