@@ -8,11 +8,12 @@ package topology {
 require mathlib from
     "/Users/monade/git/mathlib" with NameMap.empty
 
-lean_lib Topology {
+lean_lib topology {
   -- add library configuration options here
 }
 
 --@[defaultTarget]
-lean_exe topology {
-  root := `Main
-}
+--lean_exe nothing {
+--  root := `Main
+  --root := topology
+--}
