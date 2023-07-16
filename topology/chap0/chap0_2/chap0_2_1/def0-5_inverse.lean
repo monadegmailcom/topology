@@ -78,11 +78,11 @@ theorem ex_common_inv [Category C] {X : C} {Y : C} (f : X ⟶ Y) :
 
 -- my invertibility is the same as mathlib's isomorphism property
 theorem is_invertible_iff_is_iso
-  [Category C] {X : C} {Y : C} (f : X ⟶ Y) : IsIso f ↔ f is_invertible := by
+  [Category C] {X : C} {Y : C} (f : X ⟶ Y) : f is_invertible ↔ IsIso f := by
   apply Iff.intro
+  . apply IsIso.mk ∘ (ex_common_inv f)
   . intro ⟨g, ⟨lhs, rhs⟩⟩
     exact ⟨⟨g, lhs⟩,⟨g, rhs⟩⟩
-  . apply IsIso.mk ∘ (ex_common_inv f)
 
 theorem id_is_invertible [Category C] (X : C) : 𝟙 X is_invertible :=
   ⟨⟨𝟙 X, Category.comp_id (𝟙 X)⟩, ⟨𝟙 X, Category.comp_id (𝟙 X)⟩⟩
