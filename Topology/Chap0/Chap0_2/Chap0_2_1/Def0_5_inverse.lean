@@ -1,6 +1,8 @@
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.CategoryTheory.Iso
 
+import Topology.Chap0.Chap0_2.Chap0_2_1.Ex0_3_opposite
+
 open CategoryTheory
 
 /- why is mathlib4 using typeclasses like this instead of plain properties
@@ -11,8 +13,8 @@ class IsRightInvertible [Category C] {X : C} {Y : C} (f : X ⟶ Y) where
   prop : ∃ g : Y ⟶ X, g ≫ f = 𝟙 Y
 -/
 
-def is_left_inverse_of' [Category C] {X : C} {Y : C} (f : Y ⟶ X) (g : X ⟶ Y)
-  : Prop := g ≫ f = 𝟙 X
+def is_left_inverse_of' [Category C] {X : C} {Y : C} (f : X ⟶ Y) (g : Y ⟶ X)
+  : Prop := g ≫ f = 𝟙 Y
 
 -- the infix version shadows the original version
 infix:50 "is_left_inverse_of" => is_left_inverse_of'
@@ -32,8 +34,8 @@ theorem left_inv_comp
     _ = f ≫ f' := by simp
     _ = 𝟙 X := by rw[p]
 
-def is_right_inverse_of' [Category C] {X : C} {Y : C} (f : Y ⟶ X) (g : X ⟶ Y)
-  : Prop := f ≫ g = 𝟙 Y
+def is_right_inverse_of' [Category C] {X : C} {Y : C} (f : X ⟶ Y) (g : Y ⟶ X)
+  : Prop := f ≫ g = 𝟙 X
 
 infix:50 "is_right_inverse_of" => is_right_inverse_of'
 
@@ -76,6 +78,18 @@ theorem ex_common_inv [Category C] {X : C} {Y : C} (f : X ⟶ Y) :
     rw [this] at l_inv
     exact ⟨h, ⟨l_inv, r_inv⟩⟩
 
+def is_inverse_of' [Category C] {X : C} {Y : C} (f : X ⟶ Y) (g : Y ⟶ X)
+  : Prop := f is_left_inverse_of g ∧ f is_right_inverse_of g
+
+infix:50 "is_inverse_of" => is_inverse_of'
+
+theorem inv_iff_ex_inverse [Category C] {X : C} {Y : C} (f : X ⟶ Y) :
+  f is_invertible ↔ ∃ g : Y ⟶ X, g is_inverse_of f := by
+    apply Iff.intro
+    . apply ex_common_inv f
+    . intro ⟨g, ⟨p, q⟩⟩
+      exact ⟨⟨g, p⟩,⟨g, q⟩⟩
+
 -- my invertibility is the same as mathlib's isomorphism property
 theorem is_invertible_iff_is_iso
   [Category C] {X : C} {Y : C} (f : X ⟶ Y) : f is_invertible ↔ IsIso f := by
@@ -113,3 +127,55 @@ theorem isomorphic_is_trans [Category C] : IsTrans C is_isomorphic_to' :=
     have q : f ≫ g is_right_invertible := ⟨g' ≫ f', right_inv_comp qg qf⟩
     ⟨f ≫ g, ⟨p, q⟩⟩
     )
+
+/- equivalences with opposite category -/
+theorem is_left_inv_of_iff_op_is_right_inv_of_op
+  [Category C] {X : C} {Y : C} (f : X ⟶ Y) (g : Y ⟶ X)
+  : f is_left_inverse_of g ↔ op f is_right_inverse_of op g := by
+      apply Iff.intro
+      . intro p
+        exact calc
+          op f ≫ op g = g ≫ f := rfl
+          _ = 𝟙 Y := p
+      . intro p
+        exact calc
+          g ≫ f = op f ≫ op g := rfl
+          _ = 𝟙 Y := p
+
+theorem is_right_inv_of_iff_op_is_left_inv_of_op
+  [Category C] {X : C} {Y : C} (f : X ⟶ Y) (g : Y ⟶ X)
+  : f is_right_inverse_of g ↔ op f is_left_inverse_of op g := calc
+      f is_right_inverse_of g ↔ g is_left_inverse_of f
+        := by rw[left_right_inv_mutual_eq]
+      _ ↔ op g is_right_inverse_of op f
+        := by rw[is_left_inv_of_iff_op_is_right_inv_of_op]
+
+theorem is_left_inv_iff_op_is_right_inv [Category C] {X : C} {Y : C}
+  (f : X ⟶ Y) : f is_left_invertible ↔ op f is_right_invertible := by
+    apply Iff.intro
+    . intro ⟨g, p⟩
+      have : op g is_right_inverse_of op f
+        := Iff.mp (is_left_inv_of_iff_op_is_right_inv_of_op g f) p
+      exact ⟨op g, this⟩
+    . intro ⟨g, p⟩
+      let g' : Y ⟶ X := op g
+      have : g = op g' := rfl
+      rw [this] at p
+      have : g' is_left_inverse_of f
+        := Iff.mpr (is_left_inv_of_iff_op_is_right_inv_of_op g' f) p
+      exact ⟨g', this⟩
+
+theorem is_right_inv_iff_op_is_left_inv [Category C] {X : C} {Y : C}
+  (f : X ⟶ Y) : f is_right_invertible ↔ op f is_left_invertible := calc
+    op f is_left_invertible ↔ op (op f) is_right_invertible
+      := by rw [is_left_inv_iff_op_is_right_inv]
+
+theorem is_inv_iff_op_is_inv [Category C] {X : C} {Y : C} (f : X ⟶ Y) :
+  f is_invertible ↔ op f is_invertible := calc
+    f is_invertible ↔ f is_left_invertible ∧ f is_right_invertible := by rfl
+    _ ↔ op f is_right_invertible ∧ op f is_left_invertible
+      := by rw [is_left_inv_iff_op_is_right_inv f,
+                is_right_inv_iff_op_is_left_inv f]
+    _ ↔ op f is_left_invertible ∧ op f is_right_invertible
+      := by simp[and_comm]
+    _ ↔ op f is_invertible := by rfl

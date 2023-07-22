@@ -4,6 +4,8 @@ import Mathlib.Algebra.Group.Defs
 
 open CategoryTheory
 
+namespace monoid
+
 structure Obj where
   carrier : Type
   instMul : MulOneClass carrier
@@ -33,3 +35,5 @@ def f : obj ⟶ obj := 𝟙 obj
 def g : obj ⟶ obj := f ≫ f
 
 end samples
+
+end monoid

@@ -8,8 +8,10 @@ package topology {
 require mathlib from
     "/Users/monade/git/mathlib" with NameMap.empty
 
+@[default_target]
 lean_lib topology {
   -- add library configuration options here
+  globs := #[Glob.submodules "Topology"]
 }
 
 --@[defaultTarget]

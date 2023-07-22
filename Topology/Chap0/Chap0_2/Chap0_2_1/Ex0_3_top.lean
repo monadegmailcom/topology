@@ -8,6 +8,7 @@ open Topology
 open Set
 open CategoryTheory
 
+namespace top
 structure TopSpace where
   carrier : Type u
   top : TopologicalSpace carrier
@@ -44,3 +45,4 @@ def g : top ⟶ top :=
 def h : top ⟶ top := f ≫ g
 
 end sample
+end top

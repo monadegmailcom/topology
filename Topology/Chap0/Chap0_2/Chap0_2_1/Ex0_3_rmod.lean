@@ -4,6 +4,8 @@ import Mathlib.Algebra.Module.LinearMap
 
 open CategoryTheory
 
+namespace rmod
+
 structure Obj (R : Type u) [Semiring R] where
   M : Type v
   instMonoid : AddCommMonoid M
@@ -39,3 +41,4 @@ def obj2 : Obj ℕ := Obj.mk ℤ _ module2
 def f : obj1 ⟶ obj1 := 𝟙 obj1
 
 end samples
+end rmod

@@ -6,11 +6,13 @@ import Std.Data.Rat.Basic
 open Set
 open CategoryTheory
 
+namespace pointed_set
+
 structure Obj where
   carrier : Type u
   set : Set carrier
   point : carrier
-  prop : c ∈ set
+  prop : point ∈ set
 
 structure Mor (x : Obj) (y : Obj) where
   fxy : x.carrier -> y.carrier
@@ -40,3 +42,4 @@ def g : z ⟶ q := Mor.mk (fun x => mkRat x 3) (by simp) (by simp)
 def h : n ⟶ q := f ≫ g
 
 end samples
+end pointed_set

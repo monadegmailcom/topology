@@ -4,6 +4,8 @@ import Mathlib.Algebra.Group.Defs
 
 open CategoryTheory
 
+namespace one_object
+
 -- object type with only one unique instance
 structure Obj (a : Type u)
 
@@ -19,3 +21,5 @@ instance [Monoid a] : Category (Obj a) where
   assoc := Semigroup.mul_assoc
   id_comp := Monoid.one_mul
   comp_id := Monoid.mul_one
+
+end one_object

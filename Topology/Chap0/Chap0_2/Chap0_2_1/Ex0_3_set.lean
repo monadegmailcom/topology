@@ -5,6 +5,7 @@ import Mathlib.Data.Rat.Basic
 open Set
 open CategoryTheory
 
+namespace set
 namespace from_scratch
 
 structure Obj where
@@ -166,3 +167,4 @@ def h : n ⟶ q := f ≫ g
 
 end samples
 end with_set_function
+end set
