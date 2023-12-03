@@ -5,8 +5,10 @@ package topology {
   -- add package configuration options here
 }
 
-require mathlib from
-    "/Users/monade/git/mathlib" with NameMap.empty
+--require mathlib from
+--    "/Users/monade/git/mathlib" with NameMap.empty
+
+require mathlib from git "https://github.com/leanprover-community/mathlib4"@"master"
 
 @[default_target]
 lean_lib topology {

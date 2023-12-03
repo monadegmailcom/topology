@@ -1,5 +1,6 @@
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.CategoryTheory.Iso
+import Mathlib.CategoryTheory.Opposites
 
 import Topology.Chap0.Chap0_2.Chap0_2_1.Ex0_3_opposite
 
@@ -131,51 +132,59 @@ theorem isomorphic_is_trans [Category C] : IsTrans C is_isomorphic_to' :=
 /- equivalences with opposite category -/
 theorem is_left_inv_of_iff_op_is_right_inv_of_op
   [Category C] {X : C} {Y : C} (f : X ⟶ Y) (g : Y ⟶ X)
-  : f is_left_inverse_of g ↔ op f is_right_inverse_of op g := by
+  : f is_left_inverse_of g ↔ f.op is_right_inverse_of g.op := by
       apply Iff.intro
       . intro p
         exact calc
-          op f ≫ op g = g ≫ f := rfl
-          _ = 𝟙 Y := p
+          f.op ≫ g.op = (g ≫ f).op := rfl
+          _ = (𝟙 Y).op := by rw [p]
       . intro p
         exact calc
-          g ≫ f = op f ≫ op g := rfl
-          _ = 𝟙 Y := p
+          g ≫ f = (f.op ≫ g.op).unop := rfl
+          _ = (𝟙 (Opposite.op Y)).unop := by rw [p]
 
 theorem is_right_inv_of_iff_op_is_left_inv_of_op
   [Category C] {X : C} {Y : C} (f : X ⟶ Y) (g : Y ⟶ X)
-  : f is_right_inverse_of g ↔ op f is_left_inverse_of op g := calc
+  : f is_right_inverse_of g ↔ f.op is_left_inverse_of g.op := calc
       f is_right_inverse_of g ↔ g is_left_inverse_of f
         := by rw[left_right_inv_mutual_eq]
-      _ ↔ op g is_right_inverse_of op f
+      _ ↔ g.op is_right_inverse_of f.op
         := by rw[is_left_inv_of_iff_op_is_right_inv_of_op]
 
 theorem is_left_inv_iff_op_is_right_inv [Category C] {X : C} {Y : C}
-  (f : X ⟶ Y) : f is_left_invertible ↔ op f is_right_invertible := by
+  (f : X ⟶ Y) : f is_left_invertible ↔ f.op is_right_invertible := by
     apply Iff.intro
     . intro ⟨g, p⟩
-      have : op g is_right_inverse_of op f
+      have : g.op is_right_inverse_of f.op
         := Iff.mp (is_left_inv_of_iff_op_is_right_inv_of_op g f) p
-      exact ⟨op g, this⟩
+      exact ⟨g.op, this⟩
     . intro ⟨g, p⟩
-      let g' : Y ⟶ X := op g
-      have : g = op g' := rfl
+      let g' : Y ⟶ X := g.unop
+      have : g = g'.op := rfl
       rw [this] at p
       have : g' is_left_inverse_of f
         := Iff.mpr (is_left_inv_of_iff_op_is_right_inv_of_op g' f) p
       exact ⟨g', this⟩
 
 theorem is_right_inv_iff_op_is_left_inv [Category C] {X : C} {Y : C}
-  (f : X ⟶ Y) : f is_right_invertible ↔ op f is_left_invertible := calc
-    op f is_left_invertible ↔ op (op f) is_right_invertible
-      := by rw [is_left_inv_iff_op_is_right_inv]
+  (f : X ⟶ Y) : f is_right_invertible ↔ f.op is_left_invertible := by
+    apply Iff.intro
+    . intro ⟨g, h⟩
+      use g.op
+      exact Iff.mp (is_right_inv_of_iff_op_is_left_inv_of_op g f) h
+    intro ⟨g, h⟩
+    let g' : Y ⟶ X := g.unop
+    have h2 : g'.op = g := Quiver.Hom.op_unop g
+    rw [←h2] at h
+    use g'
+    exact (is_right_inv_of_iff_op_is_left_inv_of_op g' f).mpr h
 
 theorem is_inv_iff_op_is_inv [Category C] {X : C} {Y : C} (f : X ⟶ Y) :
-  f is_invertible ↔ op f is_invertible := calc
+  f is_invertible ↔ f.op is_invertible := calc
     f is_invertible ↔ f is_left_invertible ∧ f is_right_invertible := by rfl
-    _ ↔ op f is_right_invertible ∧ op f is_left_invertible
+    _ ↔ f.op is_right_invertible ∧ f.op is_left_invertible
       := by rw [is_left_inv_iff_op_is_right_inv f,
                 is_right_inv_iff_op_is_left_inv f]
-    _ ↔ op f is_left_invertible ∧ op f is_right_invertible
+    _ ↔ f.op is_left_invertible ∧ f.op is_right_invertible
       := by simp[and_comm]
-    _ ↔ op f is_invertible := by rfl
+    _ ↔ f.op is_invertible := by rfl
