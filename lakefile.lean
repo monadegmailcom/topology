@@ -11,9 +11,9 @@ package topology {
 require mathlib from git "https://github.com/leanprover-community/mathlib4"@"master"
 
 @[default_target]
-lean_lib topology {
+lean_lib Topology {
   -- add library configuration options here
-  globs := #[Glob.submodules "Topology"]
+  --globs := #[Glob.submodules "Topology"]
 }
 
 --@[defaultTarget]

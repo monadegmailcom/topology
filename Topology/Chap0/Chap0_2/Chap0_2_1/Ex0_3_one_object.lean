@@ -1,5 +1,5 @@
 import Mathlib.CategoryTheory.Category.Basic
-import Mathlib.Algebra.Hom.Group
+--import Mathlib.Algebra.Hom.Group
 import Mathlib.Algebra.Group.Defs
 
 open CategoryTheory

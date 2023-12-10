@@ -1,3 +1,4 @@
+import Mathlib.Tactic
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Data.Set.Function
 import Mathlib.Data.Rat.Basic
@@ -37,7 +38,7 @@ namespace samples
 abbrev n := Obj.mk ℕ univ 2 (by simp)
 abbrev z := Obj.mk ℤ univ 4 (by simp)
 abbrev q := Obj.mk ℚ univ (mkRat 4 3) (by simp)
-def f : n ⟶ z := Mor.mk (fun x => 2 * x) (by simp) (by simp)
+def f : n ⟶ z := Mor.mk (fun x => 2 * x) (by simp) (by norm_num)
 def g : z ⟶ q := Mor.mk (fun x => mkRat x 3) (by simp) (by simp)
 def h : n ⟶ q := f ≫ g
 

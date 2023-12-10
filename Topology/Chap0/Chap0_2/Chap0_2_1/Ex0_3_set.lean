@@ -143,10 +143,12 @@ end from_scratch
 
 namespace with_set_function
 
+@[ext]
 structure Obj where
   carrier : Type u
   s : Set carrier
 
+@[ext]
 structure Mor (x : Obj) (y : Obj) where
   fxy : x.carrier -> y.carrier
   p : Set.MapsTo fxy x.s y.s

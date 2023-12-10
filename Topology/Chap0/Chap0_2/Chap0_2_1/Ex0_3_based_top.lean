@@ -1,8 +1,8 @@
 import Mathlib.Topology.Basic
-import Mathlib.Topology.Category.Top.Basic
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Topology.Instances.Real
+import Mathlib.Topology.Category.TopCat.Basic
 
 open Topology
 open Set
