@@ -10,3 +10,5 @@ import Topology.Chap0.Chap0_2.Chap0_2_1.Ex0_3_rmod
 import Topology.Chap0.Chap0_2.Chap0_2_1.Ex0_3_set
 import Topology.Chap0.Chap0_2.Chap0_2_1.Ex0_3_top
 import Topology.Chap0.Chap0_2.Chap0_2_2.Ex0_6_functor_push_pull
+import Topology.Chap0.Chap0_2.Chap0_2_2.Ex0_6_set
+import Topology.Chap0.Chap0_2.Chap0_2_2.Ex0_6_functor_rmod
